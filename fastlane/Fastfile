@@ -1,0 +1,83 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+require 'rubygems'
+require 'jira-ruby'
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Description of what the lane does"
+  lane :custom_lane do
+	options = {
+	  :username     => 'stanislav.kaliberov',
+	  :password     => 'canoni250',
+	  :site         => 'https://newsiteam.atlassian.net/',  #'http://mydomain.atlassian.net:443/',
+	  :context_path => '',
+	  :auth_type    => :basic
+	}
+
+	client = JIRA::Client.new(options)
+
+	project = client.Project.find('BMEDIOS')
+
+	project.issues.each do |issue|
+	  puts "issue  #{issue.fields.issuetype}"
+	  puts "\n\n------------------"
+	end
+
+	# projects = client.Project.all
+
+	# projects.each do |project|
+	#   puts "#{project.id} - #{project.name}"
+	#   puts "#{project.id} - #{project.description}"
+	#   puts "-----------\n--------"
+	# end
+  end
+
+
+  lane :tagged_git do
+  	ensure_git_branch(branch:"master")
+  	# puts "git_tag_exists is #{git_tag_exists(tag:"v.0.8.0")}"
+  	puts "last_git_tag is #{last_git_tag}"
+
+	add_git_tag(prefix: "v.", build_number: "0.8.0", message: "This is test tag description")
+
+
+
+	# increment_build_number
+	# version_number = get_version_number(xcodeproj: 'Cely.xcodeproj')
+	# puts version_number
+
+  end
+
+
+  # lane :Store do
+  # increment_build_number
+  # get_version_number
+  # commit_version_bump
+  # add_git_tag
+  # pilot(skip_submission: true)
+  # end
+
+
+  # target_version = options[:version]
+  # raise "The version is missed." if target_version.nil?
+  
+
+
+end
+
+
