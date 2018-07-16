@@ -50,14 +50,13 @@ platform :ios do
 
   lane :tagged_git do
   	ensure_git_branch(branch:"master")
+  	version_number = get_version_number_from_plist(scheme: "GithubUsersBrowser")
+  	raise "The version already tagged." if git_tag_exists(tag:"v.#{version_number}")
+  	puts "Last git tag is #{last_git_tag}"
+  	puts "New git tag is v.#{version_number}"
 
-  	puts "git_tag_exists is #{git_tag_exists(tag:"v.0.8.0")}"
-  	puts "last_git_tag is #{last_git_tag}"
-
-	# add_git_tag(prefix: "v.", build_number: "0.8.0", message: "This is test tag description")
-
-
-	push_git_tags
+	add_git_tag(tag: "v.#{version_number}")
+	# push_git_tags
 
 
 	# increment_build_number
